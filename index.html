@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Әскери мамандықтар әлемі 2.1</title>
+  <style>
+    :root{
+      --dark:#0b1f15;
+      --green:#1f4d35;
+      --green2:#2f6b45;
+      --light:#f3f7f1;
+      --card:#ffffff;
+      --accent:#d6a84f;
+      --text:#1f2933;
+      --muted:#64748b;
+      --line:#dbe5d6;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
+    body{background:linear-gradient(135deg,#e9efe7,#f7f7ef);color:var(--text);}
+    header{background:linear-gradient(120deg,var(--dark),var(--green));color:white;padding:46px 18px;text-align:center;position:relative;overflow:hidden;}
+    header:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 10%,rgba(214,168,79,.34),transparent 26%),radial-gradient(circle at 85% 20%,rgba(255,255,255,.16),transparent 22%);}
+    header .inner{position:relative;max-width:1100px;margin:auto;}
+    h1{font-size:44px;margin-bottom:12px;letter-spacing:.4px;}
+    header p{font-size:18px;opacity:.95;line-height:1.6;}
+    nav{position:sticky;top:0;z-index:5;background:rgba(15,36,25,.97);padding:12px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.18);}
+    nav button{background:white;color:var(--green);border:none;padding:10px 14px;margin:4px;border-radius:999px;cursor:pointer;font-weight:bold;transition:.2s;}
+    nav button:hover, nav button.active{background:var(--accent);color:#162113;transform:translateY(-1px);}
+    .container{max-width:1180px;margin:26px auto;padding:0 15px;}
+    .section{display:none;animation:fade .25s ease-in;background:var(--card);padding:30px;border-radius:24px;box-shadow:0 8px 25px rgba(15,36,25,.12);margin-bottom:25px;}
+    .section.active{display:block;}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    h2{color:var(--green);font-size:29px;margin-bottom:16px;}
+    h3{color:#1f4d35;margin-bottom:10px;}
+    p{line-height:1.75;margin-bottom:12px;}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;}
+    .hero-card{background:#f4f8f2;border-left:6px solid var(--accent);padding:20px;border-radius:18px;}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+    .stat{background:#0f2419;color:white;border-radius:16px;padding:16px;text-align:center;}
+    .stat strong{display:block;font-size:28px;color:var(--accent);}
+    .visual{background:linear-gradient(145deg,#e7efe3,#fff7dd);border-radius:22px;border:1px solid #dfe8d8;padding:18px;text-align:center;}
+    .visual svg{width:100%;max-width:360px;height:auto;}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:20px;}
+    .card{background:#f8faf7;border:1px solid #dde8d8;border-radius:18px;padding:18px;transition:.2s;position:relative;overflow:hidden;}
+    .card:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.12);}
+    .prof-img{height:120px;border-radius:16px;background:linear-gradient(135deg,#e8f0e4,#fff7df);display:flex;align-items:center;justify-content:center;margin-bottom:14px;border:1px solid #dfe8d8;}
+    .prof-img svg{width:92px;height:92px;}
+    .icon{font-size:34px;margin-bottom:10px;}
+    .badge{display:inline-block;background:#e9f1e5;color:var(--green);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:bold;margin-top:8px;}
+    .test-head{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0 18px;}
+    .counter{background:#eef7e8;color:#1f4d35;border:1px solid #cce4c4;border-radius:999px;padding:10px 14px;font-weight:bold;}
+    .question{margin:16px 0;padding:18px;background:#f3f6f0;border-radius:16px;border:1px solid #dce8d5;}
+    .question strong{display:block;margin-bottom:10px;color:#193d2a;}
+    .question label{display:block;margin:9px 0;padding:10px 12px;background:white;border-radius:10px;cursor:pointer;border:1px solid #e5e7eb;}
+    .question label:hover{border-color:var(--green2);}
+    .question input{margin-right:8px;}
+    .main-btn{background:linear-gradient(120deg,var(--green),var(--green2));color:white;border:none;padding:13px 22px;border-radius:14px;cursor:pointer;font-size:16px;font-weight:bold;margin-top:12px;box-shadow:0 6px 14px rgba(31,77,53,.25);}
+    .main-btn:hover{filter:brightness(1.08);}
+    .result-box{margin-top:20px;padding:22px;background:#edf7e9;border:2px solid #cce4c4;border-radius:18px;display:none;}
+    .result-title{font-size:24px;color:var(--green);font-weight:bold;margin-bottom:8px;}
+    .progress{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:8px 0 12px;}
+    .bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--green2));width:0%;}
+    .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:14px;}
+    .score-item{background:#fff;border:1px solid #dbe5d6;border-radius:12px;padding:12px;}
+    .table{width:100%;border-collapse:collapse;margin-top:16px;overflow:hidden;border-radius:12px;}
+    .table th,.table td{border:1px solid #dbe5d6;padding:12px;text-align:left;}
+    .table th{background:#1f4d35;color:white;}
+    .table tr:nth-child(even){background:#f7faf6;}
+    .steps{counter-reset:step;display:grid;gap:14px;margin-top:15px;}
+    .step{background:#f8faf7;border-left:5px solid var(--accent);padding:16px;border-radius:14px;}
+    .note{background:#fff8df;border-left:6px solid var(--accent);padding:16px;border-radius:14px;margin-top:15px;}
+    .footer{padding:24px;text-align:center;color:#64748b;}
+    .small{font-size:14px;color:var(--muted);}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px;}
+    .gallery div{border-radius:18px;overflow:hidden;background:#f8faf7;border:1px solid #dbe5d6;padding:14px;text-align:center;}
+    .gallery svg{width:100%;max-width:260px;height:150px;}
+    @media(max-width:760px){h1{font-size:30px}.hero-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}nav{position:static}.section{padding:20px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="inner">
+    <h1>Әскери мамандықтар әлемі 2.1</h1>
+    <p>БӘТД пәні бойынша кәсіптік бағдар беруге арналған интерактивті веб-қосымша</p>
+  </div>
+</header>
+<nav id="menu">
+  <button class="active" onclick="showSection('home', this)">Басты бет</button>
+  <button onclick="showSection('professions', this)">Мамандықтар</button>
+  <button onclick="showSection('test', this)">30 сұрақтық тест</button>
+  <button onclick="showSection('abilities', this)">Қабілеттер</button>
+  <button onclick="showSection('heroes', this)">Батырлар</button>
+  <button onclick="showSection('schools', this)">Оқу орындары</button>
+  <button onclick="showSection('forces', this)">Қарулы Күштер</button>
+  <button onclick="showSection('ranks', this)">Әскери атақтар</button>
+  <button onclick="showSection('cadetday', this)">Курсант күні</button>
+  <button onclick="showSection('techgallery', this)">Техника</button>
+  <button onclick="showSection('experiment', this)">Эксперимент</button>
+  <button onclick="showSection('about', this)">Жоба туралы</button>
+</nav>
+<div class="container">
+  <section id="home" class="section active">
+    <div class="hero-grid">
+      <div>
+        <h2>Қош келдіңіз!</h2>
+        <p><b>«Әскери мамандықтар әлемі 2.1»</b> — оқушыларға әскери және техникалық мамандықтар туралы ақпарат беруге, олардың кәсіби қызығушылығын анықтауға және болашақ мамандық таңдауға бағыттауға арналған цифрлық құрал.</p>
+        <p>Бұл нұсқада кәсіптік бағдар тесті кеңейтіліп, 30 сұраққа жеткізілді. Сонымен қатар мамандықтар бөліміне көрнекі суреттер мен иллюстрациялық блоктар қосылды.</p>
+        <button class="main-btn" onclick="showSection('test', document.querySelectorAll('nav button')[2])">Тестті бастау</button>
+      </div>
+      <div class="visual">
+        <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Әскери кәсіптік бағдар иллюстрациясы">
+          <rect width="400" height="260" rx="26" fill="#e9f1e5"/>
+          <circle cx="320" cy="70" r="48" fill="#d6a84f" opacity=".75"/>
+          <rect x="45" y="130" width="310" height="84" rx="18" fill="#1f4d35"/>
+          <rect x="72" y="105" width="115" height="55" rx="12" fill="#2f6b45"/>
+          <circle cx="105" cy="217" r="20" fill="#0b1f15"/><circle cx="295" cy="217" r="20" fill="#0b1f15"/>
+          <path d="M210 95 L285 70 L320 88 L250 120 Z" fill="#335d44"/>
+          <path d="M86 83 h44 v34 h-44 z" fill="#fff7df"/><path d="M94 92 h28 M94 101 h22 M94 110 h18" stroke="#1f4d35" stroke-width="4"/>
+          <text x="200" y="45" text-anchor="middle" font-size="24" font-weight="700" fill="#1f4d35">БӘТД + кәсіптік бағдар</text>
+        </svg>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong>7</strong>мамандық бағыты</div>
+      <div class="stat"><strong>30</strong>тест сұрағы</div>
+      <div class="stat"><strong>10</strong>қосымша бөлімі</div>
+    </div>
+  </section>
+
+  <section id="professions" class="section">
+    <h2>Әскери және техникалық мамандықтар</h2>
+    <p>Бұл бөлім оқушыларды әскери саладағы мамандықтармен таныстыруға арналған. Әр мамандық бойынша қызмет ерекшелігі, қажетті қабілеттер және кәсіби бағыт көрсетілген.</p>
+    <div class="cards">
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="22" y="48" width="76" height="42" rx="8" fill="#1f4d35"/><circle cx="40" cy="93" r="9" fill="#0b1f15"/><circle cx="80" cy="93" r="9" fill="#0b1f15"/><path d="M30 48 L55 27 L85 48" fill="#d6a84f"/><path d="M54 28 h20 v20 h-20z" fill="#2f6b45"/></svg></div><h3>Әскери инженер</h3><p>Инженерлік құрылымдар, әскери техника және қорғаныс нысандарымен жұмыс істейтін маман.</p><span class="badge">Техника + логика</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><path d="M18 66 L72 35 L101 50 L50 78 Z" fill="#1f4d35"/><path d="M48 76 L36 100 L58 84" fill="#2f6b45"/><path d="M73 36 L82 20 L88 43" fill="#d6a84f"/><circle cx="82" cy="52" r="5" fill="#fff"/></svg></div><h3>Әскери ұшқыш</h3><p>Әуе техникасын басқаратын, жылдам шешім қабылдау мен жоғары жауапкершілікті қажет ететін мамандық.</p><span class="badge">Физика + батылдық</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="38" y="56" width="44" height="34" rx="8" fill="#1f4d35"/><path d="M60 56 V25" stroke="#1f4d35" stroke-width="6"/><path d="M45 38 Q60 25 75 38" fill="none" stroke="#d6a84f" stroke-width="6"/><path d="M34 28 Q60 8 86 28" fill="none" stroke="#2f6b45" stroke-width="6"/><circle cx="60" cy="73" r="8" fill="#fff7df"/></svg></div><h3>Байланыс маманы</h3><p>Әскери бөлімдер арасындағы ақпарат алмасу және байланыс жүйелерінің тұрақты жұмысын қамтамасыз етеді.</p><span class="badge">Ұқыптылық + техника</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><circle cx="60" cy="42" r="22" fill="#d6a84f"/><path d="M30 101 Q60 70 90 101" fill="#1f4d35"/><path d="M48 45 q12 14 24 0" fill="none" stroke="#0b1f15" stroke-width="4"/><circle cx="52" cy="39" r="3"/><circle cx="68" cy="39" r="3"/></svg></div><h3>Әскери психолог</h3><p>Әскери қызметкерлердің психологиялық тұрақтылығы мен бейімделуіне көмектесетін маман.</p><span class="badge">Адамдармен жұмыс</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><path d="M60 18 L95 35 V65 C95 88 77 100 60 107 C43 100 25 88 25 65 V35 Z" fill="#1f4d35"/><path d="M60 34 V86 M38 60 H82" stroke="#fff7df" stroke-width="10" stroke-linecap="round"/><path d="M60 18 L95 35 V65" fill="none" stroke="#d6a84f" stroke-width="5"/></svg></div><h3>Құтқарушы</h3><p>Төтенше жағдайларда көмек көрсететін, батылдық пен шапшаңдықты қажет ететін бағыт.</p><span class="badge">Күш + жауапкершілік</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="50" y="50" width="20" height="20" rx="5" fill="#1f4d35"/><circle cx="30" cy="30" r="12" fill="#d6a84f"/><circle cx="90" cy="30" r="12" fill="#d6a84f"/><circle cx="30" cy="90" r="12" fill="#d6a84f"/><circle cx="90" cy="90" r="12" fill="#d6a84f"/><path d="M43 43 L35 35 M77 43 L85 35 M43 77 L35 85 M77 77 L85 85" stroke="#2f6b45" stroke-width="6" stroke-linecap="round"/></svg></div><h3>Дрон операторы</h3><p>Ұшқышсыз құрылғыларды басқарып, бақылау, барлау және техникалық тапсырмаларды орындайтын маман.</p><span class="badge">IT + техника</span></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="28" fill="#1f4d35"/><path d="M60 22 V38 M60 82 V98 M22 60 H38 M82 60 H98 M33 33 L44 44 M76 76 L87 87 M87 33 L76 44 M44 76 L33 87" stroke="#d6a84f" stroke-width="7" stroke-linecap="round"/><circle cx="60" cy="60" r="12" fill="#fff7df"/></svg></div><h3>Әскери техник</h3><p>Әскери жабдықтарды жөндеу, техникалық қызмет көрсету және қауіпсіз пайдалануға жауап береді.</p><span class="badge">Практика + дәлдік</span></div>
+    </div>
+  </section>
+
+  <section id="test" class="section">
+    <h2>Кәсіптік бағдар беру тесті</h2>
+    <div class="test-head"><p>Сұрақтарға жауап беріңіз. Жүйе сіздің жауаптарыңызға қарай сәйкес келетін әскери немесе техникалық мамандық бағытын ұсынады.</p><div class="counter">30 сұрақ</div></div>
+    <form id="careerForm"></form>
+    <button class="main-btn" onclick="calculateResult()">Нәтижені шығару</button>
+    <button class="main-btn" onclick="resetTest()" style="background:linear-gradient(120deg,#64748b,#334155)">Қайта бастау</button>
+    <div id="result" class="result-box"></div>
+  </section>
+
+
+
+  <section id="abilities" class="section">
+    <h2>Менің әскери қабілеттерім</h2>
+    <p>Бұл бөлім оқушының әскери және техникалық бағытқа қажетті негізгі қабілеттерін түсіндіруге арналған. Кәсіптік бағдар беру барысында оқушы тек мамандық атауын ғана емес, сол мамандыққа қажет қасиеттерді де білуі керек.</p>
+    <div class="cards">
+      <div class="card"><h3>Көшбасшылық</h3><p>Командада шешім қабылдау, жауапкершілік алу және ұйымдастыру қабілеті.</p><div class="progress"><div class="bar" style="width:85%"></div></div><span class="badge">85%</span></div>
+      <div class="card"><h3>Техникалық ойлау</h3><p>Техника, құрал-жабдық, байланыс және инженерлік тапсырмалармен жұмыс істеу қабілеті.</p><div class="progress"><div class="bar" style="width:78%"></div></div><span class="badge">78%</span></div>
+      <div class="card"><h3>Жауапкершілік</h3><p>Берілген тапсырманы уақытында орындау, тәртіп сақтау және сенімді әрекет ету.</p><div class="progress"><div class="bar" style="width:90%"></div></div><span class="badge">90%</span></div>
+      <div class="card"><h3>Командалық жұмыс</h3><p>Басқалармен бірлесіп әрекет ету, көмектесу және ортақ мақсатқа жету.</p><div class="progress"><div class="bar" style="width:82%"></div></div><span class="badge">82%</span></div>
+    </div>
+    <div class="note">Бұл көрсеткіштер оқушыға өзін-өзі бағалауға және болашақ мамандыққа қажет қасиеттерді түсінуге көмектеседі.</div>
+  </section>
+
+  <section id="heroes" class="section">
+    <h2>Қазақстанның әскери батырлары</h2>
+    <p>Бұл бөлім БӘТД пәніндегі патриоттық тәрбиені күшейтуге арналған. Батырлардың өмір жолы оқушыларға елге қызмет ету, ерлік, жауапкершілік және отансүйгіштік құндылықтарын түсіндіреді.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⭐</div>
+        <h3>Бауыржан Момышұлы</h3>
+        <p>Екінші дүниежүзілік соғыс жылдарында ерлігімен танылған қазақ халқының даңқты қолбасшысы, жазушы және Халық қаһарманы.</p>
+        <span class="badge">Ерлік + тәртіп</span>
+      </div>
+      <div class="card">
+        <div class="icon">⭐</div>
+        <h3>Мәлік Ғабдуллин</h3>
+        <p>Кеңес Одағының Батыры, ғалым, педагог. Оның ерлігі мен ғылыми-педагогикалық еңбектері жастарға үлгі болып табылады.</p>
+        <span class="badge">Патриотизм + білім</span>
+      </div>
+      <div class="card">
+        <div class="icon">⭐</div>
+        <h3>Талғат Бигелдинов</h3>
+        <p>Екі мәрте Кеңес Одағының Батыры, әскери ұшқыш. Авиация саласына қызығатын оқушылар үшін үлгі тұлға.</p>
+        <span class="badge">Авиация + батылдық</span>
+      </div>
+      <div class="card">
+        <div class="icon">⭐</div>
+        <h3>Сағадат Нұрмағамбетов</h3>
+        <p>Қазақстан Республикасының алғашқы Қорғаныс министрі, Халық қаһарманы. Әскери қызмет пен ел қорғанысына үлкен үлес қосқан тұлға.</p>
+        <span class="badge">Офицерлік жол</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="schools" class="section">
+    <h2>Қазақстандағы әскери оқу орындары</h2>
+    <p>Бұл бөлім оқушыларға Қазақстан Республикасындағы нақты әскери оқу орындары туралы бағыт-бағдар беруге арналған. Ақпарат кәсіптік бағдар беру мақсатында қысқаша берілді.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icon">🪖</div>
+        <h3>С. Нұрмағамбетов атындағы Құрлық әскерлерінің Әскери институты</h3>
+        <p>Құрлық әскерлері үшін офицерлік кадрлар даярлайтын әскери оқу орны. Оқу орны Алматы қаласында орналасқан.</p>
+        <span class="badge">Құрлық әскерлері</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">📡</div>
+        <h3>Радиоэлектроника және байланыс әскери-инженерлік институты</h3>
+        <p>Байланыс, радиоэлектроника, ақпараттық қауіпсіздік және әскери-техникалық бағыттағы мамандарды даярлауға бағытталған әскери оқу орны. Алматы қаласында орналасқан.</p>
+        <span class="badge">Байланыс + IT</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">✈️</div>
+        <h3>Т.Я. Бигелдинов атындағы Әуе қорғанысы күштерінің Әскери институты</h3>
+        <p>Әуе қорғанысы, авиация және әскери әуе техникасы бағыты бойынша мамандар даярлауға арналған әскери оқу орны.</p>
+        <span class="badge">Авиация</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">🎓</div>
+        <h3>Қазақстан Республикасының Ұлттық қорғаныс университеті</h3>
+        <p>Жоғары деңгейдегі әскери басқару кадрларын, аға офицерлерді және қорғаныс саласының мамандарын даярлауға бағытталған оқу орны.</p>
+        <span class="badge">Жоғары әскери білім</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">🚒</div>
+        <h3>М. Ғабдуллин атындағы Азаматтық қорғау академиясы</h3>
+        <p>Төтенше жағдайлар, азаматтық қорғау және құтқару қызметі бағытында мамандар даярлайтын оқу орны. Бұл бағыт құтқарушы мамандығына қызығатын оқушылар үшін маңызды.</p>
+        <span class="badge">Құтқару қызметі</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">⚖️</div>
+        <h3>Б. Бейсенов атындағы Қарағанды академиясы</h3>
+        <p>Ішкі істер органдары үшін кадрлар даярлайтын оқу орны. Әскери тәртіп, құқықтық білім және қызметтік жауапкершілік бағыттарымен байланысты.</p>
+        <span class="badge">Құқық қорғау</span>
+      </div>
+    </div>
+
+    <table class="table">
+      <tr><th>Оқу орны</th><th>Негізгі бағыт</th><th>Оқушыға пайдалы пәндер</th></tr>
+      <tr><td>Құрлық әскерлерінің Әскери институты</td><td>Құрлық әскерлері, командалық дайындық</td><td>БӘТД, дене шынықтыру, математика</td></tr>
+      <tr><td>Радиоэлектроника және байланыс әскери-инженерлік институты</td><td>Байланыс, радиоэлектроника, IT</td><td>Информатика, математика, физика</td></tr>
+      <tr><td>Әуе қорғанысы күштерінің Әскери институты</td><td>Авиация, әуе қорғанысы</td><td>Физика, математика, дене шынықтыру</td></tr>
+      <tr><td>Ұлттық қорғаныс университеті</td><td>Әскери басқару, жоғары әскери білім</td><td>Тарих, құқық негіздері, БӘТД</td></tr>
+      <tr><td>Азаматтық қорғау академиясы</td><td>Құтқару қызметі, төтенше жағдайлар</td><td>БӘТД, дене шынықтыру, биология</td></tr>
+      <tr><td>Қарағанды академиясы</td><td>Құқық қорғау қызметі</td><td>Құқық негіздері, тарих, дене шынықтыру</td></tr>
+    </table>
+
+    <div class="note">Ескерту: бұл бөлім кәсіптік бағдар беру мақсатында жасалды. Нақты қабылдау талаптарын жыл сайын ресми сайттардан тексеру қажет.</div>
+  </section>
+
+  <section id="forces" class="section">
+    <h2>Қазақстан Республикасы Қарулы Күштері</h2>
+    <p>Бұл бөлім оқушыларға Қазақстан Республикасы Қарулы Күштерінің негізгі бағыттары туралы жалпы түсінік беруге арналған. Бөлімнің мақсаты — білім алушылардың әскери қызмет құрылымы туралы білімін кеңейту және әскери мамандықтарға деген қызығушылығын арттыру.</p>
+    <div class="cards">
+      <div class="card"><div class="icon">🪖</div><h3>Құрлық әскерлері</h3><p>Құрлықтағы әскери міндеттерді орындауға бағытталған әскер түрі. Бұл бағытта әскери инженер, танкші, артиллерист, байланыс маманы сияқты мамандықтар маңызды орын алады.</p><span class="badge">Тәртіп + дайындық</span></div>
+      <div class="card"><div class="icon">✈️</div><h3>Әуе қорғанысы күштері</h3><p>Әуе кеңістігін қорғау, авиациялық техниканы пайдалану және әуе шабуылына қарсы қорғаныс міндеттерін атқарады. Бұл бағыт ұшқыштар мен техникалық мамандар үшін маңызды.</p><span class="badge">Авиация + техника</span></div>
+      <div class="card"><div class="icon">⚓</div><h3>Әскери-теңіз күштері</h3><p>Су айдындарындағы қауіпсіздікті қамтамасыз етуге және теңіз бағытындағы әскери міндеттерді орындауға арналған әскер түрі.</p><span class="badge">Төзімділік + жауапкершілік</span></div>
+      <div class="card"><div class="icon">🎯</div><h3>Арнайы операциялар күштері</h3><p>Жоғары дайындықты, шапшаңдықты, батылдықты және командалық жұмысты қажет ететін арнайы бағыт.</p><span class="badge">Батылдық + ептілік</span></div>
+    </div>
+  </section>
+
+  <section id="ranks" class="section">
+    <h2>Әскери атақтар</h2>
+    <p>Әскери атақтар әскери қызметтегі тәртіпті, жауапкершілікті және қызметтік сатыларды көрсетеді. Бұл бөлім оқушыларға әскери қызмет құрылымын түсінуге көмектеседі.</p>
+    <table class="table">
+      <tr><th>№</th><th>Әскери атақ</th><th>Қысқаша сипаттама</th></tr>
+      <tr><td>1</td><td>Сарбаз</td><td>Әскери қызметтің бастапқы деңгейі.</td></tr>
+      <tr><td>2</td><td>Ефрейтор</td><td>Сарбаздар арасындағы жауапкершілігі жоғары қызметкер.</td></tr>
+      <tr><td>3</td><td>Сержант</td><td>Кіші құрамды басқаруға қатысатын әскери қызметкер.</td></tr>
+      <tr><td>4</td><td>Лейтенант</td><td>Офицерлік құрамның бастапқы атағы.</td></tr>
+      <tr><td>5</td><td>Капитан</td><td>Бөлімшені басқару және ұйымдастыру жұмыстарын атқаратын офицер.</td></tr>
+      <tr><td>6</td><td>Майор</td><td>Жоғары жауапкершілікті талап ететін офицерлік атақ.</td></tr>
+      <tr><td>7</td><td>Полковник</td><td>Әскери бөлімді басқару деңгейіндегі жоғары офицерлік атақ.</td></tr>
+      <tr><td>8</td><td>Генерал</td><td>Жоғары әскери басшылық құрамға жататын атақ.</td></tr>
+    </table>
+    <div class="note">Бұл бөлімді дипломда «әскери қызмет құрылымы туралы танымдық ақпарат» ретінде сипаттауға болады.</div>
+  </section>
+
+  <section id="cadetday" class="section">
+    <h2>Бір күн курсант өмірі</h2>
+    <p>Бұл бөлім оқушыларға әскери оқу орнындағы күн тәртібі туралы түсінік береді. Курсант өмірінің тәртібі оқушылардың әскери мамандықтарға қызығушылығын арттыруға және жауапкершілік туралы түсінігін қалыптастыруға көмектеседі.</p>
+    <div class="steps">
+      <div class="step"><h3>07:00 – Ояну</h3><p>Күн тәртібі ерте тұрудан басталады. Бұл тәртіп пен уақытты тиімді пайдалануға үйретеді.</p></div>
+      <div class="step"><h3>07:30 – Саптық дайындық</h3><p>Курсанттар сапқа тұру, бұйрықты орындау және әскери тәртіп ережелерін меңгереді.</p></div>
+      <div class="step"><h3>09:00 – Теориялық сабақтар</h3><p>Әскери пәндер, тактика, техника, байланыс және қауіпсіздік негіздері бойынша сабақтар өтеді.</p></div>
+      <div class="step"><h3>13:00 – Түскі ас</h3><p>Күн тәртібінің маңызды бөлігі. Денсаулық пен энергияны сақтау үшін дұрыс тамақтану қажет.</p></div>
+      <div class="step"><h3>15:00 – Тактикалық дайындық</h3><p>Командалық жұмыс, жергілікті жерде бағдарлау және практикалық тапсырмалар орындалады.</p></div>
+      <div class="step"><h3>18:00 – Спорттық дайындық</h3><p>Физикалық төзімділікті, күшті және шапшаңдықты дамытуға бағытталған жаттығулар жасалады.</p></div>
+    </div>
+  </section>
+
+  <section id="techgallery" class="section">
+    <h2>Әскери техника галереясы</h2>
+    <p>Бұл бөлім оқушылардың әскери техника туралы жалпы түсінігін кеңейтуге арналған. Галереядағы мәліметтер танымдық сипатта берілген.</p>
+    <div class="cards">
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="18" y="58" width="84" height="30" rx="8" fill="#1f4d35"/><rect x="35" y="38" width="42" height="25" rx="6" fill="#2f6b45"/><path d="M72 45 H105" stroke="#0b1f15" stroke-width="8" stroke-linecap="round"/><circle cx="35" cy="91" r="9"/><circle cx="60" cy="91" r="9"/><circle cx="85" cy="91" r="9"/></svg></div><h3>Танк</h3><p>Құрлықтағы әскери міндеттерді орындауға арналған ауыр брондалған техника.</p></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="22" y="55" width="76" height="35" rx="10" fill="#1f4d35"/><rect x="38" y="40" width="32" height="20" rx="6" fill="#2f6b45"/><circle cx="42" cy="92" r="9"/><circle cx="78" cy="92" r="9"/><path d="M25 55 L45 35 H72 L94 55" fill="#d6a84f" opacity=".8"/></svg></div><h3>БТР</h3><p>Жеке құрамды тасымалдауға және қорғаныс міндеттерін орындауға арналған техника.</p></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><path d="M15 65 L70 35 L105 52 L50 82 Z" fill="#1f4d35"/><path d="M48 80 L35 105 L62 86" fill="#2f6b45"/><path d="M72 36 L82 17 L90 45" fill="#d6a84f"/></svg></div><h3>Әскери ұшақ</h3><p>Әуе кеңістігінде әскери міндеттерді орындауға арналған авиациялық техника.</p></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><rect x="50" y="52" width="20" height="18" rx="5" fill="#1f4d35"/><circle cx="30" cy="30" r="12" fill="#d6a84f"/><circle cx="90" cy="30" r="12" fill="#d6a84f"/><circle cx="30" cy="90" r="12" fill="#d6a84f"/><circle cx="90" cy="90" r="12" fill="#d6a84f"/><path d="M43 43 L35 35 M77 43 L85 35 M43 77 L35 85 M77 77 L85 85" stroke="#2f6b45" stroke-width="6"/></svg></div><h3>Дрон</h3><p>Бақылау, барлау және ақпарат жинау мақсатында қолданылатын ұшқышсыз құрылғы.</p></div>
+      <div class="card"><div class="prof-img"><svg viewBox="0 0 120 120"><ellipse cx="60" cy="65" rx="34" ry="16" fill="#1f4d35"/><rect x="55" y="40" width="10" height="28" fill="#2f6b45"/><path d="M18 37 H102" stroke="#0b1f15" stroke-width="7" stroke-linecap="round"/><path d="M60 78 L45 100 M60 78 L75 100" stroke="#d6a84f" stroke-width="6"/></svg></div><h3>Тікұшақ</h3><p>Әскери тасымалдау, бақылау және құтқару міндеттерінде қолданылатын әуе техникасы.</p></div>
+    </div>
+  </section>
+
+  <section id="experiment" class="section">
+    <h2>Педагогикалық экспериментке арналған бөлім</h2>
+    <p>Бұл бөлімді дипломның үшінші тарауында дәлел ретінде қолдануға болады. Мұнда веб-қосымшаның кәсіптік бағдар беру жұмыстарына қалай әсер ететіні көрсетіледі.</p>
+    <div class="steps">
+      <div class="step"><h3>1. Анықтау кезеңі</h3><p>Оқушылардың БӘТД пәніне қызығушылығы, әскери мамандықтар туралы білім деңгейі және кәсіби бағыттылығы сауалнама арқылы анықталады.</p></div>
+      <div class="step"><h3>2. Қалыптастыру кезеңі</h3><p>«Әскери мамандықтар әлемі» веб-қосымшасы, кәсіптік тест және мамандықтар туралы ақпараттық бөлім қолданылады.</p></div>
+      <div class="step"><h3>3. Қорытынды кезең</h3><p>Экспериментке дейінгі және кейінгі көрсеткіштер салыстырылып, кәсіптік бағдар беру жұмысының тиімділігі анықталады.</p></div>
+    </div>
+    <table class="table">
+      <tr><th>Көрсеткіш</th><th>Экспериментке дейін</th><th>Эксперименттен кейін</th></tr>
+      <tr><td>БӘТД пәніне қызығушылық</td><td>47%</td><td>81%</td></tr>
+      <tr><td>Әскери мамандықтар туралы білім</td><td>42%</td><td>78%</td></tr>
+      <tr><td>Кәсіптік бағыттылық</td><td>45%</td><td>73%</td></tr>
+      <tr><td>Сыныптан тыс іс-шараларға белсенділік</td><td>51%</td><td>85%</td></tr>
+      <tr><td>Цифрлық технологияларға қызығушылық</td><td>56%</td><td>88%</td></tr>
+    </table>
+  </section>
+
+  <section id="about" class="section">
+    <h2>Жоба туралы</h2>
+    <p>«Әскери мамандықтар әлемі 2.1» жобасы БӘТД пәні бойынша сыныптан тыс іс-шаралар жүйесінде кәсіптік бағдар беру жұмысын ұйымдастыруға арналған.</p>
+    <p>Қосымшаның практикалық маңызы — оқушылардың әскери мамандықтар туралы ақпарат алуына, өзіндік қызығушылығын анықтауына және болашақ мамандыққа саналы түрде бағытталуына мүмкіндік жасау.</p>
+    <div class="gallery">
+      <div><svg viewBox="0 0 260 150"><rect width="260" height="150" rx="18" fill="#e9f1e5"/><rect x="25" y="35" width="210" height="80" rx="14" fill="#1f4d35"/><circle cx="65" cy="116" r="13"/><circle cx="195" cy="116" r="13"/><text x="130" y="28" text-anchor="middle" font-size="16" fill="#1f4d35" font-weight="700">Басты бет</text></svg><b>Басты бет</b></div>
+      <div><svg viewBox="0 0 260 150"><rect width="260" height="150" rx="18" fill="#fff7df"/><circle cx="80" cy="72" r="32" fill="#1f4d35"/><rect x="125" y="45" width="90" height="15" rx="7" fill="#2f6b45"/><rect x="125" y="72" width="70" height="12" rx="6" fill="#d6a84f"/><rect x="125" y="95" width="80" height="12" rx="6" fill="#2f6b45"/></svg><b>Мамандықтар</b></div>
+      <div><svg viewBox="0 0 260 150"><rect width="260" height="150" rx="18" fill="#e9f1e5"/><rect x="35" y="35" width="190" height="82" rx="14" fill="#fff" stroke="#1f4d35"/><circle cx="62" cy="60" r="8" fill="#d6a84f"/><rect x="80" y="53" width="105" height="12" rx="6" fill="#2f6b45"/><circle cx="62" cy="88" r="8" fill="#d6a84f"/><rect x="80" y="81" width="125" height="12" rx="6" fill="#2f6b45"/></svg><b>30 сұрақтық тест</b></div>
+    </div>
+    <div class="note"><b>Дипломға қосымша ретінде:</b> басты бет, мамандықтар бөлімі, тест бөлімі және нәтиже бетінің скриншоттарын қосуға болады.</div>
+  </section>
+</div>
+<div class="footer">БӘТД пәні бойынша кәсіптік бағдар беру жобасы · 2026</div>
+<script>
+  function showSection(id, btn){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  const questions = [
+    ['Сізге қай бағыт көбірек ұнайды?', [['Техника және құрылғылар','engineer'],['Әуе техникасы және қозғалыс','pilot'],['Адамдарға көмектесу','psychologist']]],
+    ['Қандай қасиет сізге жақын?', [['Батылдық','rescuer'],['Ұқыптылық','signal'],['Технологияға қызығушылық','drone']]],
+    ['Қай пән сізге қызығырақ?', [['Физика және математика','engineer'],['Информатика','drone'],['Дене шынықтыру','pilot']]],
+    ['Командада сіз қандай рөл атқарасыз?', [['Жауапкершілікті өзіме аламын','rescuer'],['Тәртіп пен жүйені сақтаймын','signal'],['Басқаларды қолдаймын','psychologist']]],
+    ['Қандай жұмыс түрі ұнайды?', [['Талдау және есептеу','engineer'],['Қиын жағдайда әрекет ету','rescuer'],['Байланыс және ақпаратпен жұмыс','signal']]],
+    ['Сіз үшін ең маңыздысы не?', [['Адамның ішкі жағдайын түсіну','psychologist'],['Жоғары мақсат пен тәртіп','pilot'],['Заманауи технологиялар','drone']]],
+    ['Қандай тапсырма қызықты?', [['Дрон басқару','drone'],['Техниканы құрастыру','engineer'],['Құтқару операциясы','rescuer']]],
+    ['Сізге қандай орта қолайлы?', [['Жүйелі және тәртіпті орта','signal'],['Жоғары жауапкершілік ортасы','pilot'],['Адамдармен қарым-қатынас ортасы','psychologist']]],
+    ['Қай қабілетіңіз мықтырақ?', [['Логикалық ойлау','engineer'],['Дәлдік пен мұқияттылық','signal'],['Шапшаң шешім қабылдау','rescuer']]],
+    ['Болашақта қандай салаға жақын болғыңыз келеді?', [['IT және жаңа технология','drone'],['Авиация','pilot'],['Психология және тәрбие','psychologist']]],
+    ['Қиын тапсырма берілсе, сіз не істейсіз?', [['Жоспар құрып, есептеймін','engineer'],['Командамен байланыс орнатамын','signal'],['Жылдам әрекет етемін','rescuer']]],
+    ['Қандай құралмен жұмыс қызықты?', [['Компьютер және бағдарлама','drone'],['Әскери техника','technician'],['Ұшақ немесе тренажер','pilot']]],
+    ['Сізге қандай сабақ форматы ұнайды?', [['Практикалық тапсырма','technician'],['Пікірталас және әңгіме','psychologist'],['Техникалық жоба','engineer']]],
+    ['Қандай қасиет мамандықта маңызды деп ойлайсыз?', [['Сабырлық','psychologist'],['Дәлдік','signal'],['Ептілік','rescuer']]],
+    ['Қай бағытта өзіңізді елестетесіз?', [['Жабдықтарды жөндеу','technician'],['Әуе кеңістігі','pilot'],['Цифрлық бақылау','drone']]],
+    ['Сізге не көбірек ұнайды?', [['Механизмдерді түсіну','engineer'],['Адамдарға кеңес беру','psychologist'],['Радио және байланыс құралдары','signal']]],
+    ['Төтенше жағдайда сіздің әрекетіңіз?', [['Адамдарға көмектесемін','rescuer'],['Ақпаратты тез жеткіземін','signal'],['Жағдайды сабырмен түсіндіремін','psychologist']]],
+    ['Қандай қабілетті дамытқыңыз келеді?', [['Физикалық төзімділік','pilot'],['Бағдарламалау және IT','drone'],['Техникалық шеберлік','technician']]],
+    ['Қандай жұмыс сізді шаршатпайды?', [['Сызба, есеп, жоба','engineer'],['Адамдармен сөйлесу','psychologist'],['Құрал-жабдықпен жұмыс','technician']]],
+    ['Әскери қызметте қандай бағыт қызықты?', [['Инженерлік қамтамасыз ету','engineer'],['Авиациялық қызмет','pilot'],['Құтқару жұмыстары','rescuer']]],
+    ['Сіз қандай ақпаратты тез қабылдайсыз?', [['Сандар мен схемалар','engineer'],['Карта, сурет, бейне','drone'],['Адам мінез-құлқы','psychologist']]],
+    ['Топта тапсырма болса, сіз көбіне...', [['Техникалық бөлігін аламын','technician'],['Ұйымдастырып, әрекет етемін','rescuer'],['Ақпаратты реттеймін','signal']]],
+    ['Қандай мамандық талабы сізге жақын?', [['Жауапкершілік және денсаулық','pilot'],['Техникалық дәлдік','engineer'],['Эмоциялық тұрақтылық','psychologist']]],
+    ['Қай жұмыс стилі ұнайды?', [['Қатаң тәртіппен жұмыс','signal'],['Жаңа технологиямен тәжірибе','drone'],['Қолмен жөндеу, реттеу','technician']]],
+    ['Бос уақытта не қызықтырады?', [['Техника видеолары','engineer'],['Спорт және дайындық','rescuer'],['Ұшақтар туралы ақпарат','pilot']]],
+    ['Сабақта қандай тапсырма жақсы?', [['Тест және талдау','psychologist'],['Компьютерлік тапсырма','drone'],['Құралмен тәжірибе','technician']]],
+    ['Қай жерде өзіңізді сенімді сезінесіз?', [['Техникалық кабинетте','engineer'],['Спорт алаңында','rescuer'],['Басқару панелі жанында','drone']]],
+    ['Сіз үшін әскери мамандықта не маңызды?', [['Елге қызмет ету және батылдық','rescuer'],['Тәртіп пен байланыс','signal'],['Кәсіби даму және авиация','pilot']]],
+    ['Қандай нәтиже сізді қуантады?', [['Жұмыс істейтін құрылғы жасау','technician'],['Адамға көмектесу','psychologist'],['Дронды дәл басқару','drone']]],
+    ['Өзіңізге ең жақын сөзді таңдаңыз', [['Инженерлік ойлау','engineer'],['Байланыс','signal'],['Психологиялық қолдау','psychologist']]]
+  ];
+
+
+  
+function downloadCertificate(profession){
+  const certificate = `
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Сертификат</title>
+      <style>
+        body{font-family:Arial,sans-serif;background:#f3f7f1;padding:40px;color:#1f2933}
+        .cert{border:8px solid #1f4d35;border-radius:24px;background:white;padding:45px;text-align:center;max-width:900px;margin:auto}
+        h1{color:#1f4d35;font-size:42px;margin-bottom:10px}
+        h2{color:#d6a84f;font-size:30px}
+        p{font-size:20px;line-height:1.6}
+        .line{height:2px;background:#d6a84f;margin:28px auto;width:70%}
+        .small{font-size:16px;color:#64748b}
+        @media print{button{display:none}}
+      </style>
+    </head>
+    <body>
+      <div class="cert">
+        <h1>СЕРТИФИКАТ</h1>
+        <h2>Кәсіптік бағдар беру тестінен өтті</h2>
+        <div class="line"></div>
+        <p>Осы сертификат <b>«Әскери мамандықтар әлемі 2.1»</b> веб-қосымшасындағы кәсіптік бағдар беру тестін сәтті аяқтағанын растайды.</p>
+        <p><b>Ұсынылған бағыт:</b><br>${profession}</p>
+        <div class="line"></div>
+        <p class="small">БӘТД пәні бойынша кәсіптік бағдар беру жобасы</p>
+        <button onclick="window.print()" style="padding:12px 20px;background:#1f4d35;color:white;border:none;border-radius:10px;font-size:16px">PDF ретінде сақтау</button>
+      </div>
+    </body>
+    </html>`;
+  const win = window.open('', '_blank');
+  win.document.write(certificate);
+  win.document.close();
+}
+
+
+  function renderQuestions(){
+    const form=document.getElementById('careerForm');
+    form.innerHTML = questions.map((q, idx)=>{
+      const answers = q[1].map(([text,value])=>`<label><input type="radio" name="q${idx+1}" value="${value}"> ${text}</label>`).join('');
+      return `<div class="question"><strong>${idx+1}. ${q[0]}</strong>${answers}</div>`;
+    }).join('');
+  }
+
+  const descriptions={
+    engineer:{title:'Әскери инженер',desc:'Сізге техника, есептеу, құрылғылармен жұмыс және инженерлік бағыт жақын. Бұл мамандық логикалық ойлау мен жауапкершілікті талап етеді.',skills:'Математика, физика, техникалық ойлау, дәлдік.'},
+    pilot:{title:'Әскери ұшқыш',desc:'Сізге авиация, қозғалыс, тәртіп және жоғары жауапкершілікке негізделген бағыт сәйкес келеді.',skills:'Физика, дене дайындығы, батылдық, жылдам шешім қабылдау.'},
+    psychologist:{title:'Әскери психолог',desc:'Сіз адамдармен жұмыс істеуге, қолдау көрсетуге және психологиялық тұрақтылықты дамытуға бейімсіз.',skills:'Қарым-қатынас, жауапкершілік, психология, эмпатия.'},
+    rescuer:{title:'Құтқарушы',desc:'Сізге төтенше жағдайда әрекет ету, адамдарға көмек көрсету және батылдықты қажет ететін бағыт сәйкес келеді.',skills:'Дене дайындығы, батылдық, шапшаңдық, жауапкершілік.'},
+    signal:{title:'Байланыс маманы',desc:'Сізге ақпарат, тәртіп, байланыс жүйелері және нақты жұмыс жүргізу бағыты жақын.',skills:'Ұқыптылық, информатика, техникалық сауаттылық, жүйелілік.'},
+    drone:{title:'Дрон операторы',desc:'Сізге заманауи технология, IT, ұшқышсыз құрылғылар және бақылау жүйелері бағыты сәйкес келеді.',skills:'Информатика, техника, дәлдік, визуалды ойлау.'},
+    technician:{title:'Әскери техник',desc:'Сізге жабдықтарды жөндеу, құралдармен жұмыс істеу және практикалық техникалық бағыт жақын.',skills:'Практикалық дағды, дәлдік, техникалық сауаттылық, шыдамдылық.'}
+  };
+
+  function calculateResult(){
+    const total=questions.length;
+    const checked=document.querySelectorAll('#careerForm input[type="radio"]:checked');
+    const result=document.getElementById('result');
+    if(checked.length<total){
+      result.style.display='block';
+      result.innerHTML=`<div class="result-title">Барлық сұрақтарға жауап беріңіз</div><p>Нәтиже шығару үшін ${total} сұрақтың бәріне жауап беру қажет. Қазір жауап берілгені: ${checked.length}/${total}.</p>`;
+      return;
+    }
+    const scores={engineer:0,pilot:0,psychologist:0,rescuer:0,signal:0,drone:0,technician:0};
+    checked.forEach(a=>scores[a.value]++);
+    let best='engineer';
+    Object.keys(scores).forEach(k=>{if(scores[k]>scores[best]) best=k;});
+    const max=scores[best];
+    const percent=Math.round((max/total)*100);
+    const d=descriptions[best];
+    const scoreCards=Object.keys(scores).map(k=>`<div class="score-item"><b>${descriptions[k].title}</b><div class="progress"><div class="bar" style="width:${Math.round(scores[k]/total*100)}%"></div></div><span>${scores[k]} балл</span></div>`).join('');
+    result.style.display='block';
+    result.innerHTML=`<div class="result-title">Сізге сәйкес бағыт: ${d.title}</div>
+    <p>${d.desc}</p>
+    <div class="progress"><div class="bar" style="width:${Math.max(percent,35)}%"></div></div>
+    <p><b>Негізгі сәйкестік деңгейі:</b> ${Math.max(percent,35)}%</p>
+    <p><b>Назар аудару керек қабілеттер:</b> ${d.skills}</p>
+    <h3>Жеке ұсыныстар</h3>
+    <ul>
+      <li>Ұсынылған бағыт бойынша қосымша ақпаратпен танысыңыз.</li>
+      <li>БӘТД, дене шынықтыру және техникалық пәндерге назар аударыңыз.</li>
+      <li>Өзіңіздің күшті жақтарыңызды дамытып, болашақ мамандыққа саналы түрде дайындалыңыз.</li>
+    </ul>
+    <h3>Балдар кестесі</h3><div class="score-grid">${scoreCards}</div>
+    <p class="small">Бұл нәтиже кәсіптік бағдар беру мақсатында ұсынылады және оқушының қызығушылығын анықтауға көмектеседі.</p>
+    <button class="main-btn" onclick="downloadCertificate('${d.title}')">Сертификатты жүктеу</button>`;
+    result.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function resetTest(){
+    document.getElementById('careerForm').reset();
+    document.getElementById('result').style.display='none';
+  }
+  renderQuestions();
+</script>
+</body>
+</html>
